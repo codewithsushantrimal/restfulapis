@@ -1,0 +1,36 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: beige;
+}
+
+.contact {
+  background-color: black;
+  color: white;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+  gap: 2rem;
+  height: 70%;
+  margin: auto;
+  padding: 10rem 5rem;
+}
+
+input {
+  padding: 20px 15px;
+  border: 1px solid rgb(233, 0, 0);
+}
+
+button {
+  padding: 20px 10px;
+  border-radius: 15px 15px;
+  font-size: 20px;
+  background-color: purple;
+  color: white;
+}
