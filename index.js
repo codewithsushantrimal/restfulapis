@@ -1,68 +1,31 @@
 import express from "express";
-import fs from "fs";
-import path from "path";
-import mongoose from "mongoose";
-import { MongoClient, ServerApiVersion } from "mongodb";
+import cookieParser from "cookie-parser";
 
-// Single routing
 const app = express();
 
-//database connection
-mongoose
-  .connect("mongodb://127.0.0.1:27017/", {
-    dbName: "explorebackend",
-  })
-  .then(() => console.log("Database connected successfully"))
-  .catch((e) => console.log("e"));
+// Middleware
+app.use(cookieParser());
 
-// User Schema
-const contactSchema = new mongoose.Schema({
-  name: String,
-  email: String,
-  message: String,
+// Setting a Cookie
+app.get("/set-cookie", (req, res) => {
+  res.cookie("username", "john", { maxAge: 3600000 }); // Cookie expires in 1 hour
+  res.send("Cookie has been set.");
 });
 
-const Message = mongoose.model("Message", contactSchema);
-//view engine
-app.set("view engine", "ejs");
-
-//Middlewares
-app.use(express.static(path.join("public")));
-app.use(express.urlencoded({ extended: true }));
-
-app.get("/add", async (req, res) => {
-  await Message.create({
-    name: "Sushant",
-    email: "devcommunitynepal@gmail.com",
-    message: "Hello, this is a test!",
-  });
-  res.send("hello!");
+// Reading a Cookie
+app.get("/get-cookie", (req, res) => {
+  const username = req.cookies.username;
+  res.send(`Username from cookie: ${username}`);
 });
 
-app.get("/", (req, res) => {
-  res.render("index.ejs");
+// Clearing a Cookie
+app.get("/clear-cookie", (req, res) => {
+  res.clearCookie("username");
+  res.send("Cookie has been cleared.");
 });
 
-app.post("/contact", async (req, res) => {
-  await Message.create({
-    name: req.body.name,
-    email: req.body.email,
-    message: req.body.message,
-  });
-
-  res.redirect("/success");
-});
-
-app.get("/success", (req, res) => {
-  res.render("success");
-});
-
-app.get("/users", (req, res) => {
-  res.json({
-    users,
-  });
-});
-
-app.listen(5000, (req, res) => {
-  console.log("Server is listening");
+// Start the server
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log(`Server is listening on port ${PORT}`);
 });
